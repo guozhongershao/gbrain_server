@@ -2,14 +2,34 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-	id="WebApp_ID" version="3.1">
+	id="gbrain" version="3.1">
 
+	<!-- 配置spring start -->
+	<!-- contextConfigLocation -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<!-- 注意路径，classpath = "/gbrain_server/src/main/resources/" -->
+		<!-- 全路径：/gbrain_server/src/main/resources/config/applicationContext*.xml -->
+		<param-value>classpath:config/applicationContext*.xml</param-value>
+	</context-param>
+
+	<!-- ContextLoaderListener -->
+	<!-- 项目启动时加载spring配置文件 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- 配置spring end -->
+    
+	<!-- 配置 springMVC DispatcherServlet -->
 	<servlet>
 		<servlet-name>DispatcherServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value> classpath:applicationContext.xml</param-value>
+			<!-- 注意路径，classpath = "/gbrain_server/src/main/resources/" -->
+			<!-- 配置 springMVC-servlet 配置文件 -->
+			<param-value> classpath:config/springMVC-servlet.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -17,4 +37,20 @@
 		<servlet-name>DispatcherServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+<!-- 配置log4j -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>
+			classpath:config/log4j.properties
+	</param-value>
+	</context-param>
+	<!-- Log4j listener -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
 </web-app>

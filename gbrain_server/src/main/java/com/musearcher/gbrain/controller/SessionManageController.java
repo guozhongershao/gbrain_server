@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/test")
 public class SessionManageController {
+	// 测试地址：http://localhost:8080/gbrain/test/hello?user=World
     @RequestMapping(value = "hello", method = RequestMethod.GET)
     @ResponseBody
     public String helloWorld(@RequestParam ("user") String userName) {
-           return "Hello " + userName + " !" ;
+    	return "index";
    }
 }
