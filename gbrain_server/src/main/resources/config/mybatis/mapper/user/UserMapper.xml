@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.musearcher.gbrain.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.musearcher.gbrain.entity.User" >
+    <id column="User_Name" jdbcType="VARCHAR" property="userName" />
+    <result column="User_PassWord" jdbcType="VARCHAR" property="userPassword" />
+    <result column="User_AccessToken" jdbcType="VARCHAR" property="userAccesstoken" />
+    <result column="User_LastLoginTime" jdbcType="TIMESTAMP" property="userLastlogintime" />
+    <result column="User_NickName" jdbcType="VARCHAR" property="userNickname" />
+    <result column="User_Avatar" jdbcType="VARCHAR" property="userAvatar" />
+    <result column="User_Gender" jdbcType="CHAR" property="userGender" />
+    <result column="User_Email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="User_PhoneNum" jdbcType="VARCHAR" property="userPhonenum" />
+    <result column="User_UpdateTimme" jdbcType="TIMESTAMP" property="userUpdatetimme" />
+    <result column="User_CreateTime" jdbcType="TIMESTAMP" property="userCreatetime" />
+  </resultMap>
+  
+  <resultMap id="UserInfoBeanMap" type="com.musearcher.gbrain.bean.UserInfoBean" >
+    <result column="User_Name" property="userName" jdbcType="VARCHAR" />
+    <result column="User_NickName" property="userNickName" jdbcType="VARCHAR" />
+    <result column="User_AccessToken" property="userAccessToken" jdbcType="VARCHAR" />
+    <result column="User_Gender" property="userGender" jdbcType="CHAR" />
+    <result column="User_Email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="User_Avatar" property="userAvatar" jdbcType="VARCHAR" />
+    <result column="User_Integral" property="userIntegral" jdbcType="INTEGER" />
+    <result column="User_PhoneNumber" property="userPhoneNumber" jdbcType="VARCHAR" />
+    <result column="User_Address" property="userAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    
+  	<!-- 查询:通过userName password 组合查找用户完整信息 -->
+	<select id="getUserBycredential" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        <![CDATA[
+        	select *
+        	from
+        		tbl_User 
+        	where 
+        		User_Name = #{userName,jdbcType=VARCHAR}
+        		and User_PassWord = #{password,jdbcType=VARCHAR}
+    	]]>
+    </select>
+    
+    <!-- 查询：通过userName 查找用户完整信息 -->
+	<select id="getUserByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        <![CDATA[
+        	select *
+        	from 
+        		tbl_User 
+        	where 
+        		User_Name = #{userName,jdbcType=VARCHAR}
+    	]]>
+    </select>
+    
+    <!-- 更新：通过userName 更新用户accessToken -->
+    <select id="refreshUserAccessTokenByUserName" parameterType="java.util.HashMap">
+    	<![CDATA[
+    		update tbl_User 
+    		set 
+    			User_AccessToken = #{accessToken,jdbcType=VARCHAR}
+    		where 
+    			User_Name = #{userName,jdbcType=VARCHAR}
+    	]]>
+    </select>
+    
+    <!-- 插入：插入一条新的user信息 -->
+    <select id="insertUser" parameterType="java.util.HashMap">
+        <![CDATA[
+			INSERT INTO
+				tbl_User o
+				(
+				  User_Name,
+				  User_Password,
+				  User_NickName,
+				  User_Avatar,
+				  User_Email,
+				  User_PhoneNum,
+				  User_Address`
+				  )
+			VALUES
+				(
+				#{userName,jdbcType=VARCHAR},
+		]]>
+				<if test="userPassword != null and !&quot;&quot;.equals(userPassword.trim())">
+					<![CDATA[
+					#{userPassword,jdbcType=VARCHAR),
+					]]>
+				</if>
+
+				<if test="userNickName != null and !&quot;&quot;.equals(userNickName.trim())">
+					<![CDATA[
+					#{userNickName,jdbcType=VARCHAR),
+					]]>
+				</if>
+				
+				<if test="userAvatar != null and !&quot;&quot;.equals(userAvatar.trim())">
+					<![CDATA[
+					#{userAvatar,jdbcType=VARCHAR)
+					]]>
+				</if>
+				
+				<if test="userEmail != null and !&quot;&quot;.equals(userEmail.trim())">
+					<![CDATA[
+					#{userEmail,jdbcType=VARCHAR),
+					]]>
+				</if>	
+							
+				<if test="userPhoneNumber != null and !&quot;&quot;.equals(userPhoneNumber.trim())">
+					<![CDATA[
+					#{userPhoneNumber,jdbcType=VARCHAR),
+					]]>
+				</if>					
+				
+				<if test="userAddress != null and !&quot;&quot;.equals(userAddress.trim())">
+					<![CDATA[
+					#{userAddress,jdbcType=VARCHAR)
+					]]>
+				</if>					
+    </select>
+    
+        <!-- 查询：通过userName 查找用户profile信息 -->
+	<select id="getUserInfoByUserName" resultMap="UserInfoBeanMap" parameterType="java.lang.String">
+        <![CDATA[
+        	select *
+        	from 
+        		tbl_User 
+        	where 
+        		User_Name = #{userName,jdbcType=VARCHAR}
+    	]]>
+    </select>
+    
+    <select id="getFocusedUserList" resultMap="UserInfoBeanMap" parameterType="java.util.HashMap">
+   	<![CDATA[
+			SELECT *
+			FROM 
+				tbl_User
+			WHERE 
+				user_Name 
+			IN(
+				SELECT	Focs_FolloweeName
+				FROM 
+					tbl_focus
+				WHERE 
+					Focs_FollowerName  = #{userName,jdbcType=VARCHAR}
+					)
+       ]]>
+     </select>
+</mapper>
