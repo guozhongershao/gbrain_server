@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+
+	<!-- 启用shiro授权注解拦截方式 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 装配 securityManager -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 配置登录页面 -->
+		<property name="loginUrl" value="/pages/login.jsp" />
+		<!-- 配置登录成功后页面 -->
+		<property name="successUrl" value="/pages/index.jsp" />
+		<!-- 配置验证失败的页面 -->
+		<property name="unauthorizedUrl" value="/pages/unauthorized.jsp" />
+		<!-- filterChainDefinitions -->
+		<property name="filterChainDefinitions">
+			<value>
+				<!-- 对静态资源匿名访问 -->
+				/images/** = anon
+				/js/** = anon
+				/css/** = anon
+				/pages/* = anon
+				
+				/pages/logout.jsp = logout
+				/** = authc
+				<!-- /** = authc 所有的url都必须认证通过才能访问 -->
+				<!-- /** = anon 所有url都可以匿名访问 -->
+			</value>
+		</property>
+	</bean>
+
+	<!-- 配置进行授权和认证的 Realm -->
+	<bean id="userRealm" class="com.musearcher.gbrain.shiro.UserRealm" />
+
+	<!-- 配置SecurityManager -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="userRealm" />
+	</bean>
+
+	<!-- 配置 Bean 后置处理器：会自动的调用和 Spring 整合后各个组件的生命周期方法 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+</beans>  
