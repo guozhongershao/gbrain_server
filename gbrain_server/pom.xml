@@ -176,6 +176,11 @@
 			<artifactId>shiro-ehcache</artifactId>
 			<version>${shiro.version}</version>
 		</dependency>
-
+		
+<!-- 		<dependency>
+			<groupId>springside</groupId>
+			<artifactId>springside-components</artifactId>
+			<version>1.0.0</version>
+		</dependency> -->
 	</dependencies>
 </project>
