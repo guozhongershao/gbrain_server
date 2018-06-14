@@ -1,4 +1,4 @@
-package com.musearcher.gbrain.common.utils;
+package com.musearcher.gbrain.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,15 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-
 /**
  * 读取Properties综合类,默认绑定到classpath下的config.properties文件。
  * 
  * @author 朱志杰 QQ:695520848
  */
 public class PropertiesUtil {
+	// 单例
+	private static PropertiesUtil p = new PropertiesUtil();
 
-	// 配置文件的路径
+	/**
+	 *  配置文件的路径
+	 */
 	private String		configPath	= null;
 	/**
 	 * 配置文件对象
@@ -29,12 +32,16 @@ public class PropertiesUtil {
 	/**
 	 * 默认构造函数，用于sh运行，自动找到classpath下的config.properties。
 	 */
-	public PropertiesUtil() throws IOException {
+	private PropertiesUtil() {
 		InputStream in = PropertiesUtil.class.getClassLoader().getResourceAsStream("config/fileHandleConfig.properties");
 		props = new Properties();
-		props.load(in);
-		// 关闭资源
-		in.close();
+		try {
+			props.load(in);
+			// 关闭资源
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -97,13 +104,7 @@ public class PropertiesUtil {
 		fos.close();
 	}
 
-	public static void main(String[] args) {
-		PropertiesUtil p;
-		try {
-			p = new PropertiesUtil();
-			System.out.println(p.readAllProperties());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public static PropertiesUtil getPropertiesUtil() {
+		return p;
 	}
 }
